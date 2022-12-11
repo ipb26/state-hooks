@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Watch State Hooks",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "watch"
+            ],
+        }
+    ]
+}
