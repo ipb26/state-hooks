@@ -30,42 +30,68 @@ export function useCustomCompareUpdateEffect<D extends DependencyList>(effect: E
     }, deps, depsAreEqual)
 }
 
-export function useDeepCompareEffect<D extends DependencyList>(effect: EffectCallback, deps: D) {
+export function useDeepCompareEffect<D extends DependencyList>(effect: EffectCallback, deps: [...D]) {
     return useCustomCompareEffect(effect, deps, dequal)
 }
-export function useDeepCompareUpdateEffect<D extends DependencyList>(effect: EffectCallback, deps: D) {
+export function useDeepCompareUpdateEffect<D extends DependencyList>(effect: EffectCallback, deps: [...D]) {
     return useCustomCompareUpdateEffect(effect, deps, dequal)
 }
-export function useDeepCompareCallback<T, D extends DependencyList>(callback: () => T, deps: D) {
+export function useDeepCompareCallback<T, D extends DependencyList>(callback: () => T, deps: [...D]) {
     return useCustomCompareCallback(callback, deps, dequal)
 }
-export function useDeepCompareMemo<T, D extends DependencyList>(factory: () => T, deps: D) {
+export function useDeepCompareMemo<T, D extends DependencyList>(factory: () => T, deps: [...D]) {
     return useCustomCompareMemo(factory, deps, dequal)
 }
-export function useCustomCompareFactoryWithCleanup<T, D extends DependencyList>(factory: (...args: D) => T, cleanup: (value: T) => void, deps: D, depsAreEqual: DepsAreEqual<readonly [...D]>) {
+export function useFactoryWithCleanup<T, D extends DependencyList>(factory: (...args: D) => T, cleanup: (value: T) => void, deps: [...D]) {
+    return useMemoWithCleanup(() => factory(...deps), cleanup, deps)
+}
+export function useCustomCompareFactoryWithCleanup<T, D extends DependencyList>(factory: (...args: D) => T, cleanup: (value: T) => void, deps: [...D], depsAreEqual: DepsAreEqual<readonly [...D]>) {
     return useCustomCompareMemoWithCleanup(() => factory(...deps), cleanup, deps, depsAreEqual)
 }
-export function useDeepCompareFactoryWithCleanup<T, D extends DependencyList>(factory: (...args: D) => T, cleanup: (value: T) => void, deps: D) {
+export function useDeepCompareFactoryWithCleanup<T, D extends DependencyList>(factory: (...args: D) => T, cleanup: (value: T) => void, deps: [...D]) {
     return useCustomCompareFactoryWithCleanup(factory, cleanup, deps, dequal)
 }
-export function useCustomCompareFactory<T, D extends DependencyList>(factory: (...args: D) => T, deps: D, depsAreEqual: DepsAreEqual<readonly [...D]>) {
+export function useCustomCompareFactory<T, D extends DependencyList>(factory: (...args: D) => T, deps: [...D], depsAreEqual: DepsAreEqual<readonly [...D]>) {
     return useCustomCompareMemo(() => factory(...deps), deps, depsAreEqual)
 }
-export function useDeepCompareFactory<T, D extends DependencyList>(factory: (...args: D) => T, deps: D) {
+export function useDeepCompareFactory<T, D extends DependencyList>(factory: (...args: D) => T, deps: [...D]) {
     return useCustomCompareFactory(factory, deps, dequal)
 }
-export function useMemoWithCleanup<T, D extends DependencyList>(factory: () => T, cleanup: (value: T) => void, deps: D) {
+
+/**
+ * Compares a value to its previous value. If unchanged, emits the previous value (so that it can be compared by reference by other hooks).
+ */
+export function useCustomCompareConstant<T>(value: T, depsAreEqual: DepsAreEqual<readonly [T]>) {
+    return useCustomCompareMemo(() => value, [value], depsAreEqual)
+}
+/**
+ * Compares a value to its previous value. If unchanged, emits the previous value (so that it can be compared by reference by other hooks).
+ */
+export function useDeepCompareConstant<T>(value: T) {
+    return useCustomCompareConstant(value, dequal)
+}
+
+/**
+ * Memoizes a value and allows you to pass a cleanup function for convenience. The cleanup function is executed if the value changes.
+ */
+export function useMemoWithCleanup<T, D extends DependencyList>(factory: () => T, cleanup: (value: T) => void, deps: [...D]) {
     const value = useMemo(factory, deps)
     useEffect(() => () => cleanup(value), [value])
     return value
 }
-export function useDeepCompareMemoWithCleanup<T, D extends DependencyList>(factory: () => T, cleanup: (value: T) => void, deps: D) {
-    const value = useDeepCompareMemo(factory, deps)
+/**
+ * Memoizes a value and allows you to pass a cleanup function for convenience. The cleanup function is executed if the value changes.
+ */
+export function useCustomCompareMemoWithCleanup<T, D extends DependencyList>(factory: () => T, cleanup: (value: T) => void, deps: [...D], depsAreEqual: DepsAreEqual<readonly [...D]>) {
+    const value = useCustomCompareMemo(factory, deps, depsAreEqual)
     useEffect(() => () => cleanup(value), [value])
     return value
 }
-export function useCustomCompareMemoWithCleanup<T, D extends DependencyList>(factory: () => T, cleanup: (value: T) => void, deps: D, depsAreEqual: DepsAreEqual<readonly [...D]>) {
-    const value = useCustomCompareMemo(factory, deps, depsAreEqual)
+/**
+ * Memoizes a value and allows you to pass a cleanup function for convenience. The cleanup function is executed if the value changes.
+ */
+export function useDeepCompareMemoWithCleanup<T, D extends DependencyList>(factory: () => T, cleanup: (value: T) => void, deps: [...D]) {
+    const value = useDeepCompareMemo(factory, deps)
     useEffect(() => () => cleanup(value), [value])
     return value
 }
