@@ -1,16 +1,16 @@
-import { AnchorHTMLAttributes, DetailedHTMLProps, MouseEvent, useCallback } from "react"
+import { AnchorHTMLAttributes, DetailedHTMLProps, Fragment, MouseEvent, ReactNode, useCallback } from "react"
 
 export type MaybeProps<T> = {
     value: T | undefined
-    render: (value: T) => JSX.Element
-    otherwise?: JSX.Element
+    render: ((value: T) => ReactNode)
+    otherwise?: ReactNode
 }
 
 export function Maybe<T>(props: MaybeProps<T>) {
     if (props.value === undefined) {
-        return props.otherwise ?? null
+        return <Fragment children={props.otherwise} />
     }
-    return props.render(props.value)
+    return <Fragment children={props.render(props.value)} />
 }
 
 export type AnchorProps = Omit<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href">
