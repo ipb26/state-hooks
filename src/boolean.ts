@@ -15,5 +15,5 @@ export function useBoolean(initialValue: boolean): BooleanState {
     const on = useCallback(() => set(true), [])
     const off = useCallback(() => set(false), [])
     const toggle = useCallback(() => set(state => !state), [])
-    return { value, on, off, toggle, set } as const
+    return { value, on, off, toggle, set }
 }
