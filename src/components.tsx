@@ -7,7 +7,7 @@ export type MaybeProps<T> = {
 }
 
 export function Maybe<T>(props: MaybeProps<T>) {
-    if (props.value === undefined) {
+    if (props.value === undefined || props.value === null) {
         return <Fragment children={props.otherwise} />
     }
     return <Fragment children={props.render(props.value)} />
@@ -25,4 +25,4 @@ export function Anchor(props: AnchorProps) {
     return (
         <a href={onClick === undefined ? undefined : ""} onClick={click} {...rest} />
     )
-}
+} 
