@@ -1,5 +1,6 @@
 
 export * from "./boolean"
+export * from "./bound"
 export * from "./cleanup"
 export * from "./components"
 export * from "./constant"

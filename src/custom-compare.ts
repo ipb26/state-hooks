@@ -8,6 +8,7 @@ export function useCustomCompareUpdateEffect<D extends DependencyList>(effect: E
     useCustomCompareEffect(() => {
         if (firstMount.current) {
             firstMount.current = false
+            return
         }
         return effect()
     }, deps, depsAreEqual)
