@@ -2,7 +2,6 @@ import { dequal } from "dequal"
 import { useState } from "react"
 import { useCustomCompareEffect } from "use-custom-compare"
 
-//TODO fix all refs
 export function useSyncState<T>(inputValue: T, setInputValue?: ((value: T) => void)) {
     return useCustomCompareSyncState(inputValue, setInputValue, (a, b) => a === b)
 }
