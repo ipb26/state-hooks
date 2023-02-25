@@ -1,7 +1,7 @@
 import { AnchorHTMLAttributes, DetailedHTMLProps, Fragment, MouseEvent, ReactNode, useCallback } from "react"
 
 export type MaybeProps<T> = {
-    value: T | undefined
+    value: T | undefined | null
     render(value: T): ReactNode
     otherwise?: ReactNode
 }
