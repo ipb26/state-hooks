@@ -1,6 +1,6 @@
 import { dequal } from "dequal"
 import { useState } from "react"
-import { useCustomCompareEffect } from "use-custom-compare"
+import { useCustomCompareUpdateEffect } from "./custom-compare"
 
 export function useSyncState<T>(inputValue: T, setInputValue?: ((value: T) => void)) {
     return useCustomCompareSyncState(inputValue, setInputValue, (a, b) => a === b)
@@ -10,10 +10,10 @@ export function useDeepCompareSyncState<T>(inputValue: T, setInputValue?: ((valu
 }
 export function useCustomCompareSyncState<T>(inputValue: T, setInputValue: ((value: T) => void) | undefined, compare: (a: T, b: T) => boolean) {
     const [value, setValue] = useState(inputValue)
-    useCustomCompareEffect(() => {
+    useCustomCompareUpdateEffect(() => {
         if (setInputValue === undefined) {
             setValue(inputValue)
         }
-    }, [inputValue], (a, b) => compare(a[0], b[0]))
+    }, [inputValue] as const, (a, b) => compare(a[0], b[0]))//TODO why do we have to do ! - we didnt when we were using useCustomCompareEffect fronm that library
     return [setInputValue !== undefined ? inputValue : value, setInputValue !== undefined ? setInputValue : setValue] as const
 }
