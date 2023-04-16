@@ -14,6 +14,6 @@ export function useCustomCompareSyncState<T>(inputValue: T, setInputValue: ((val
         if (setInputValue === undefined) {
             setValue(inputValue)
         }
-    }, [inputValue] as const, (a, b) => compare(a[0], b[0]))//TODO why do we have to do ! - we didnt when we were using useCustomCompareEffect fronm that library
+    }, [inputValue] as const, (a, b) => compare(a[0], b[0]))
     return [setInputValue !== undefined ? inputValue : value, setInputValue !== undefined ? setInputValue : setValue] as const
 }
