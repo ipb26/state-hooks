@@ -1,24 +1,35 @@
-import { DependencyList, EffectCallback, useEffect, useRef } from "react";
+import { DependencyList, EffectCallback, useCallback, useEffect, useMemo, useRef } from "react";
+import { DepsAreEqual } from "./types";
+import { useIsFirstMount } from "./updates";
 
-export { useCustomCompareCallback, useCustomCompareMemo } from "use-custom-compare";
-
-export type DepsAreEqual<TDependencyList extends DependencyList> = (prevDeps: TDependencyList, nextDeps: TDependencyList) => boolean
-
-export function useCustomCompareEffect<TDeps extends DependencyList>(effect: EffectCallback,
-    deps: TDeps,
-    depsEqual: DepsAreEqual<TDeps>) {
+export function useCustomCompareCallback<T extends (...args: readonly unknown[]) => unknown, TDeps extends DependencyList>(callback: T, deps: TDeps, depsEqual: DepsAreEqual<TDeps>) {
     const ref = useRef<TDeps | undefined>(undefined)
-    if (!ref.current || !depsEqual(deps, ref.current)) {
+    if (ref.current === undefined || !depsEqual(deps, ref.current)) {
         ref.current = deps
     }
-    useEffect(effect, ref.current)
+    return useCallback(callback, ref.current)
+}
+
+export function useCustomCompareMemo<T, TDeps extends DependencyList>(factory: () => T, deps: TDeps, depsEqual: DepsAreEqual<TDeps>) {
+    const ref = useRef<TDeps | undefined>(undefined)
+    if (ref.current === undefined || !depsEqual(deps, ref.current)) {
+        ref.current = deps
+    }
+    return useMemo(factory, ref.current)
+}
+
+export function useCustomCompareEffect<TDeps extends DependencyList>(effect: EffectCallback, deps: TDeps, depsEqual: DepsAreEqual<TDeps>) {
+    const ref = useRef<TDeps | undefined>(undefined)
+    if (ref.current === undefined || !depsEqual(deps, ref.current)) {
+        ref.current = deps
+    }
+    return useEffect(effect, ref.current)
 }
 
 export function useCustomCompareUpdateEffect<D extends DependencyList>(effect: EffectCallback, deps: readonly [...D], depsAreEqual: DepsAreEqual<readonly [...D]>) {
-    const firstMount = useRef(true)
-    useCustomCompareEffect(() => {
-        if (firstMount.current) {
-            firstMount.current = false
+    const firstMount = useIsFirstMount()
+    return useCustomCompareEffect(() => {
+        if (firstMount) {
             return
         }
         return effect()
