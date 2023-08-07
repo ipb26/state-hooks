@@ -7,6 +7,7 @@ import { useDeepCompareMemo } from "./deep-compare"
 export function useCustomCompareConstant<T>(value: T, depsAreEqual: DepsAreEqual<readonly [T]>) {
     return useCustomCompareMemo(() => value, [value], depsAreEqual)
 }
+
 /**
  * Compares a value to its previous value. If unchanged, emits the previous value (so that it can be compared by reference by other hooks).
  */
