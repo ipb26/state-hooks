@@ -1,6 +1,7 @@
 import { DependencyList, useCallback } from "react"
-import { DepsAreEqual, useCustomCompareCallback } from "use-custom-compare"
+import { useCustomCompareCallback } from "./custom-compare"
 import { useDeepCompareCallback } from "./deep-compare"
+import { DepsAreEqual } from "./types"
 
 export function useFactoryCallback<T, D extends DependencyList>(factory: (...args: D) => T, deps: [...D]) {
     return useCallback(() => factory(...deps), deps)

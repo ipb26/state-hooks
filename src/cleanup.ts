@@ -1,6 +1,7 @@
 import { DependencyList, useEffect, useMemo } from "react"
-import { DepsAreEqual, useCustomCompareMemo } from "use-custom-compare"
+import { useCustomCompareMemo } from "./custom-compare"
 import { useDeepCompareMemo } from "./deep-compare"
+import { DepsAreEqual } from "./types"
 
 /**
  * Memoizes a value and allows you to pass a cleanup function for convenience. The cleanup function is executed if the value changes.

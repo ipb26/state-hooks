@@ -1,6 +1,6 @@
 import { DependencyList } from "react"
-import { DepsAreEqual } from "use-custom-compare"
 import { useCustomCompareMemoWithCleanup, useDeepCompareMemoWithCleanup, useMemoWithCleanup } from "./cleanup"
+import { DepsAreEqual } from "./types"
 
 export function useFactoryWithCleanup<T, D extends DependencyList>(factory: (...args: D) => T, cleanup: (value: T) => void, deps: [...D]) {
     return useMemoWithCleanup(() => factory(...deps), cleanup, deps)

@@ -1,6 +1,7 @@
 import { DependencyList, useMemo } from "react"
-import { DepsAreEqual, useCustomCompareMemo } from "use-custom-compare"
+import { useCustomCompareMemo } from "./custom-compare"
 import { useDeepCompareMemo } from "./deep-compare"
+import { DepsAreEqual } from "./types"
 
 export function useFactory<T, D extends DependencyList>(factory: (...args: D) => T, deps: [...D]) {
     return useMemo(() => factory(...deps), deps)
