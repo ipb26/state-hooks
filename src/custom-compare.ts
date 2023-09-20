@@ -2,7 +2,7 @@ import { DependencyList, EffectCallback, useCallback, useEffect, useMemo, useRef
 import { DepsAreEqual } from "./types";
 import { useIsFirstMount } from "./updates";
 
-export function useCustomCompareCallback<T extends (...args: readonly unknown[]) => unknown, TDeps extends DependencyList>(callback: T, deps: TDeps, depsEqual: DepsAreEqual<TDeps>) {
+export function useCustomCompareCallback<T extends Function, TDeps extends DependencyList>(callback: T, deps: TDeps, depsEqual: DepsAreEqual<TDeps>) {
     const ref = useRef<TDeps | undefined>(undefined)
     if (ref.current === undefined || !depsEqual(deps, ref.current)) {
         ref.current = deps
