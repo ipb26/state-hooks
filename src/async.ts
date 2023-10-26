@@ -1,37 +1,16 @@
-import { useEffect, useState } from "react"
-import { useBoolean } from "./boolean"
+import { useCounter } from "./counter"
 
-export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => Promise<R>) {
-    const busy = useBoolean()
-    const [result, setResult] = useState<PromiseSettledResult<unknown>>()
-    useEffect(() => {
-        if (result !== undefined) {
-            if (result.status === "rejected") {
-                throw result.reason
-            }
-        }
-    }, [
-        result
-    ])
+export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
+    const runs = useCounter()
     return {
-        busy: busy.value,
-        call: async (...args: A) => {
-            busy.on()
-            setResult(undefined)
+        isRunning: runs.count > 0,
+        run: async (...args: A) => {
+            runs.increment()
             try {
-                setResult({
-                    status: "fulfilled",
-                    value: await func(...args)
-                })
-            }
-            catch (reason) {
-                setResult({
-                    status: "rejected",
-                    reason
-                })
+                await func(...args)
             }
             finally {
-                busy.off()
+                runs.decrement()
             }
         }
     }
