@@ -1,28 +1,26 @@
 {
-    "name": "use-custom-deep",
+    "name": "state-hooks",
     "license": "MIT",
     "version": "0.0.1",
+    "sideEffects": false,
     "scripts": {
-        "clean": "rm -rf dist",
-        "build": "rm -rf dist && npx concurrently \"npx tsc -p tsconfig.esm.json\" \"npx tsc -p tsconfig.cjs.json\"",
-        "watch": "npx concurrently \"npx tsc -p tsconfig.esm.json --watch\" \"npx tsc -p tsconfig.cjs.json --watch\""
+        "doc": "npx typedoc src/index.ts",
+        "build": "rollup -c --configPlugin @rollup/plugin-typescript",
+        "watch": "yarn build -w"
     },
-    "main": "./dist/cjs/index.js",
-    "module": "./dist/esm/index.js",
-    "types": "./dist/types/index.d.ts",
-    "exports": {
-        ".": {
-            "require": "./dist/cjs/index.js",
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
     "dependencies": {
         "dequal": "^2.0.3",
         "value-or-factory": "^0.0.1"
     },
     "devDependencies": {
-        "@types/react": "^18.2.0"
+        "@rollup/plugin-typescript": "^11.1.4",
+        "@types/react": "^18.2.0",
+        "rollup": "^3.29.4",
+        "tslib": "^2.6.2",
+        "typescript": "^5.2.2"
     },
     "peerDependencies": {
         "react": "^18.2.0"

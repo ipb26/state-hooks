@@ -1,23 +1,29 @@
 {
     "compilerOptions": {
+        "jsx": "react-jsx",
         "strict": true,
         "alwaysStrict": true,
-        "noImplicitOverride": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
-        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noImplicitOverride": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
-        "jsx": "react-jsx",
-        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "useUnknownInCatchVariables": true,
+        "exactOptionalPropertyTypes": true,
+        "allowSyntheticDefaultImports": true,
         "target": "esnext",
         "declaration": true,
-        "declarationDir": "dist/types",
-        "sourceMap": true,
+        "declarationDir": "dist",
+        "emitDeclarationOnly": true,
+        "moduleResolution": "bundler",
+        "skipLibCheck": true
     },
     "include": [
-        "./src"
+        "src"
     ]
 }
