@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react"
+import { useState } from "react"
+import { useCallbackOnce } from "."
 
 /**
  * Returns a boolean state object.
@@ -7,8 +8,8 @@ import { useCallback, useState } from "react"
  */
 export function useBoolean(initialValue = false) {
     const [value, set] = useState(initialValue)
-    const on = useCallback(() => set(true), [])
-    const off = useCallback(() => set(false), [])
-    const toggle = useCallback(() => set(state => !state), [])
+    const on = useCallbackOnce(() => set(true))
+    const off = useCallbackOnce(() => set(false))
+    const toggle = useCallbackOnce(() => set(state => !state))
     return { value, on, off, toggle, set }
 }

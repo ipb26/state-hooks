@@ -2,9 +2,9 @@ import { Fragment, ReactNode } from "react"
 
 export type MaybeProps<T> = {
 
-    value: T | undefined | null
-    children(value: T): ReactNode
-    otherwise?: ReactNode
+    readonly value: T | undefined | null
+    readonly children: (value: T) => ReactNode
+    readonly otherwise?: ReactNode | undefined
 
 }
 
