@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export function useThrower() {
     const [exception, setException] = useState<unknown>()
-    if (exception !== undefined) {
-        throw exception
-    }
+    useEffect(() => {
+        if (exception !== undefined) {
+            throw exception
+        }
+    }, [
+        exception
+    ])
     return setException
 }
