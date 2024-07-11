@@ -6,7 +6,7 @@ import { useCallbackOnce } from "."
  * @param initialValue An initial boolean value.
  * @returns A boolean state object.
  */
-export function useBoolean(initialValue = false) {
+export function useBoolean(initialValue: boolean | (() => boolean) = false) {
     const [value, set] = useState(initialValue)
     const on = useCallbackOnce(() => set(true))
     const off = useCallbackOnce(() => set(false))

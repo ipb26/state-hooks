@@ -23,3 +23,16 @@ export * from "./time"
 export * from "./types"
 export * from "./updates"
 
+/*
+export function useObjectMemo() {
+
+}
+
+export function useDeepCompareObjectMemo() {
+
+}
+
+export function useCustomCompareObjectMemo() {
+
+}
+*/

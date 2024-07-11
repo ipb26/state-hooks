@@ -1,21 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useBoolean } from "./boolean";
+import { useUpdateEffect } from "./updates";
 
-//TODO optional
-export function useAt(time: number | undefined) {
-    const [passed, setPassed] = useState<boolean>()
+export function useAt(time: number) {
+    const passed = useBoolean(time <= Date.now())
+    const until = time - Date.now()
+    useUpdateEffect(() => {
+        passed.set(until <= 0)
+    }, [
+        until
+    ])
+    const at = until <= 2147483647 ? until : 0
     useEffect(() => {
-        if (time === undefined) {
-            setPassed(undefined)
+        if (at <= 0) {
+            return
         }
-        else {
-            setPassed(time <= Date.now())
-            const timeout = setTimeout(() => setPassed(true), time - Date.now())
-            return () => {
-                clearInterval(timeout)
-            }
+        const timeout = setTimeout(passed.on, at)
+        return () => {
+            clearTimeout(timeout)
         }
     }, [
-        time
+        at
     ])
-    return passed
+    return passed.value
 }
