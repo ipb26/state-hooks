@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import { useBoolean } from "./boolean";
-import { useEffectOnce } from "./once";
 
 /*
 
@@ -45,12 +45,14 @@ export function useEvent<T>(target: HasEvents<T>, eventName: string, startingSta
 
 export function useVisibility() {
     const visible = useBoolean(document.visibilityState === "visible")
-    useEffectOnce(() => {
+    useEffect(() => {
         const listener = () => visible.set(document.visibilityState === "visible")
         window.document.addEventListener("visibilitychange", listener)
         return () => {
             window.document.removeEventListener("visibilitychange", listener)
         }
-    })
+    }, [
+        window
+    ])
     return visible.value
 }

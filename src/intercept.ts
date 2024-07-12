@@ -15,27 +15,34 @@ export function wrapped<I extends {}, W extends {}>(wrapper: ComponentType<W>, w
     }
 }
 
+// TODO just these 2, or split to 4? replace,wrap,transformProps,wrapWithProps
+
 type InterceptType<P extends {}> = {
 
     readonly type: "replace"
-    readonly element: ValueOrFactory<ReactNode, [ComponentType<P>]>
+    readonly element: ValueOrFactory<ReactNode, [ReactNode]>
 
 } | {
 
     readonly type: "transform"
     readonly props: P
+    readonly wrap?: ((node: ReactNode) => ReactNode) | undefined
 
 }
 
 export function intercept<I extends {}, O extends {}>(intercept: (props: I) => InterceptType<O>) {
     return (component: ComponentType<O>) => {
         return (props: I) => {
-            const result = callOrGet(intercept(props), component)
+            const result = intercept(props)
             if (result.type === "replace") {
-                return createElement(Fragment, { children: callOrGet(result.element, component) })
+                return createElement(Fragment, { children: callOrGet(result.element, createElement(component)) })
             }
             else {
-                return createElement(component, result.props)
+                const rendered = createElement(component, result.props)
+                if (result.wrap === undefined) {
+                    return rendered
+                }
+                return result.wrap(rendered)
             }
         }
     }

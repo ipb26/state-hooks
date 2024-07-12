@@ -1,7 +1,7 @@
-import { DependencyList, useCallback, useMemo } from "react"
-import { useCustomCompareCallback, useCustomCompareMemo } from "./custom-compare"
-import { useDeepCompareCallback, useDeepCompareMemo } from "./deep-compare"
-import { useCallbackOnce, useMemoOnce } from "./once"
+import { DependencyList, useMemo } from "react"
+import { useCustomCompareMemo } from "./custom-compare"
+import { useDeepCompareMemo } from "./deep-compare"
+import { useMemoOnce } from "./once"
 import { DepsAreEqual } from "./types"
 
 export function useConstructorOnce<T>(factory: new () => T) {
