@@ -5,14 +5,13 @@ import { callOrGet, ValueOrFactory } from "value-or-factory"
  * Wraps the transformed component as a child of another.
  */
 export function wrapped<I extends {}, W extends {}>(wrapper: ComponentType<W>, wrapperProps: ValueOrFactory<W, [I]>) {
-    return (component: ComponentType<I>) => {
-        return (props: I) => {
-            return createElement(wrapper, {
-                ...callOrGet(wrapperProps, props),
-                children: createElement(component, props)
-            })
+    return intercept((props: I) => {
+        return {
+            type: "transform",
+            props: props,
+            render: children => createElement(wrapper, { ...callOrGet(wrapperProps, props), children })
         }
-    }
+    })
 }
 
 // TODO just these 2, or split to 4? replace,wrap,transformProps,wrapWithProps
@@ -20,13 +19,13 @@ export function wrapped<I extends {}, W extends {}>(wrapper: ComponentType<W>, w
 type InterceptType<P extends {}> = {
 
     readonly type: "replace"
-    readonly element: ValueOrFactory<ReactNode, [ReactNode]>
+    readonly element: ValueOrFactory<ReactNode, [ComponentType<P>]>
 
 } | {
 
     readonly type: "transform"
     readonly props: P
-    readonly wrap?: ((node: ReactNode) => ReactNode) | undefined
+    readonly render?: ((children: ReactNode) => ReactNode) | undefined
 
 }
 
@@ -35,14 +34,14 @@ export function intercept<I extends {}, O extends {}>(intercept: (props: I) => I
         return (props: I) => {
             const result = intercept(props)
             if (result.type === "replace") {
-                return createElement(Fragment, { children: callOrGet(result.element, createElement(component)) })
+                return createElement(Fragment, { children: callOrGet(result.element, component) })
             }
             else {
-                const rendered = createElement(component, result.props)
-                if (result.wrap === undefined) {
-                    return rendered
+                const children = createElement(component, result.props)
+                if (result.render === undefined) {
+                    return children
                 }
-                return result.wrap(rendered)
+                return result.render(children)
             }
         }
     }
