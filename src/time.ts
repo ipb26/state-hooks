@@ -1,30 +1,37 @@
-import { useEffect, useState } from "react";
+import { EffectCallback, useEffect } from "react";
 import { useBoolean } from "./boolean";
 import { useUpdateEffect } from "./updates";
 
-export function useAt(time: number) {
-    const passed = useBoolean(time <= Date.now())
-    const until = time - Date.now()
+export const MAXIMUM_AT = 2147483647
+
+export function useAt(time: number | undefined) {
+    const until = time === undefined ? undefined : time - Date.now()
+    if (until !== undefined) {
+        if (until > 2147483647) {
+            throw new Error("You can not set a timeout this far in the future: " + time + ".")
+        }
+    }
+    const already = until === undefined ? false : until <= 0
+    const passed = useBoolean(already)
     useUpdateEffect(() => {
-        passed.set(until <= 0)
+        passed.set(already)
     }, [
-        until
+        already
     ])
-    const at = until <= 2147483647 ? until : 0
     useEffect(() => {
-        if (at <= 0) {
-            return
-        }
-        const timeout = setTimeout(passed.on, at)
-        return () => {
-            clearTimeout(timeout)
+        if (!already) {
+            const timeout = setTimeout(passed.on, until)
+            return () => {
+                clearTimeout(timeout)
+            }
         }
     }, [
-        at
+        until,
     ])
     return passed.value
 }
 
+/*
 export function useOptionalAt(time: number | undefined) {
     const until = time === undefined ? undefined : time - Date.now()
     const [passed, setPassed] = useState<boolean | undefined>(until === undefined ? undefined : until <= 0)
@@ -52,4 +59,15 @@ export function useOptionalAt(time: number | undefined) {
         at
     ])
     return passed
+}*/
+
+export function useEffectAt(time: number | undefined, effect: EffectCallback) {
+    const at = useAt(time)
+    useEffect(() => {
+        if (at) {
+            return effect()
+        }
+    }, [
+        at
+    ])
 }
