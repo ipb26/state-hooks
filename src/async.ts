@@ -1,24 +1,40 @@
-import { useState } from "react"
+import { useCallback } from "react"
+import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { useCounter } from "./counter"
 import { useThrower } from "./thrower"
 
-export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
+export function useAsyncTracker() {
     const runs = useCounter()
-    const [result, setResult] = useState<R>()
     const thrower = useThrower()
     return {
         isRunning: runs.count > 0,
         runningCount: runs.count,
-        result,
-        run: (...args: A) => {
+        run: (promise: ValueOrFactory<PromiseLike<unknown>>) => {
             runs.increment()
-            func(...args).then(result => {
+            callOrGet(promise).then(() => {
                 runs.decrement()
-                setResult(result)
             }, e => {
                 runs.decrement()
                 thrower(e)
             })
         }
+    }
+}
+export function useTrackingAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
+    const tracker = useAsyncTracker()
+    return {
+        isRunning: tracker.isRunning,
+        runningCount: tracker.runningCount,
+        run: useCallback((...args: A) => tracker.run(() => func(...args)), [func])
+    }
+}
+
+//TODO rm?
+export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
+    const tracker = useAsyncTracker()
+    return {
+        isRunning: tracker.isRunning,
+        runningCount: tracker.runningCount,
+        run: (...args: A) => tracker.run(() => func(...args))
     }
 }
