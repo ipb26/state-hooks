@@ -11,6 +11,6 @@ export function useDeepCompareUpdateEffect<D extends DependencyList>(effect: Eff
 export function useDeepCompareCallback<T extends Function, D extends DependencyList>(callback: T, deps: [...D]) {
     return useCustomCompareCallback(callback, deps, dequal)
 }
-export function useDeepCompareMemo<T, D extends DependencyList>(factory: () => T, deps: [...D]) {
+export function useDeepCompareMemo<T>(factory: () => T, deps: DependencyList) {
     return useCustomCompareMemo(factory, deps, dequal)
 }

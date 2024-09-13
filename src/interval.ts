@@ -1,13 +1,32 @@
-import { useEffect } from "react"
+import { DependencyList, useEffect } from "react"
 
-export function useInterval(callback: () => void, interval: number) {
+//TODO deep compare etc
+
+export function useInterval(interval: number | undefined, callback: () => void, deps: DependencyList) {
     useEffect(() => {
+        if (interval === undefined || interval <= 0) {
+            return
+        }
         const timer = setInterval(callback, interval)
         return () => {
             clearInterval(timer)
         }
     }, [
         interval,
-        callback
+        deps
+    ])
+}
+
+export function useIntervalOnce(interval: number | undefined, callback: () => void) {
+    useEffect(() => {
+        if (interval === undefined || interval === 0) {
+            return
+        }
+        const timer = setInterval(callback, interval)
+        return () => {
+            clearInterval(timer)
+        }
+    }, [
+        interval
     ])
 }
