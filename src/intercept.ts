@@ -16,12 +16,13 @@ export function wrapped<I extends {}, W extends {}>(wrapper: ComponentType<W>, w
 
 // TODO just these 2, or split to 4? replace,wrap,transformProps,wrapWithProps
 
-type InterceptType<P extends {}> = {
+/**
+ * A type that represents the intercept type.
+ * It can either replace the component or transform the props before they are passed to the inner component.
+ */
+type InterceptType<P extends {}> = ReplaceIntercept<P> | TransformIntercept<P>
 
-    readonly type: "replace"
-    readonly element: ValueOrFactory<ReactNode, [ComponentType<P>]>
-
-} | {
+export interface TransformIntercept<P> {
 
     readonly type: "transform"
     readonly props: P
@@ -29,6 +30,18 @@ type InterceptType<P extends {}> = {
 
 }
 
+export interface ReplaceIntercept<P> {
+
+    readonly type: "replace"
+    readonly element: ValueOrFactory<ReactNode, [ComponentType<P>]>
+
+}
+
+/**
+ * A hoc that intercepts the props of a component.
+ * @param intercept The intercept type.
+ * @returns A new component.
+ */
 export function intercept<I extends {}, O extends {}>(intercept: (props: I) => InterceptType<O>) {
     return (component: ComponentType<O>) => {
         return (props: I) => {

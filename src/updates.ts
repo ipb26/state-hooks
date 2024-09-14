@@ -9,7 +9,7 @@ export function useIsFirstMount() {
     return isFirst.current
 }
 
-export function useUpdateEffect(effect: EffectCallback, deps?: DependencyList | undefined) {
+export function useUpdateEffect(effect: EffectCallback, deps: DependencyList) {
     const firstMount = useIsFirstMount()
     return useEffect(() => {
         if (firstMount) {

@@ -14,7 +14,9 @@ export function useAsyncUpdateEffect(callback: AsyncEffectCallback) {
     const thrower = useThrower()
     useUpdateEffect(() => {
         callback().then(() => void 0, thrower)
-    })
+    }, [
+        callback
+    ])
 }
 export function useAsyncEffectOnce(callback: AsyncEffectCallback) {
     const thrower = useThrower()

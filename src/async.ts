@@ -3,6 +3,10 @@ import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { useCounter } from "./counter"
 import { useThrower } from "./thrower"
 
+/**
+ * Returns an object that can be used to track async operations.
+ * @returns An object that can be used to track async operations.
+ */
 export function useAsyncTracker() {
     const runs = useCounter()
     const thrower = useThrower()
