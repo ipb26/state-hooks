@@ -25,6 +25,9 @@ export function useAt(time: number | Date | undefined) {
         already
     ])
     useEffect(() => {
+        if (until === undefined) {
+            return
+        }
         if (!already) {
             const timeout = setTimeout(passed.on, until)
             return () => {
