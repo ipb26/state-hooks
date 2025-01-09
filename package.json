@@ -16,9 +16,9 @@
         "value-or-factory": "^0.0.1"
     },
     "devDependencies": {
-        "@rollup/plugin-typescript": "^12.1.1",
-        "@types/react": "^19.0.0",
-        "rollup": "^4.28.0",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@types/react": "^19.0.3",
+        "rollup": "^4.30.0",
         "tslib": "^2.8.1",
         "typescript": "^5.7.2"
     },
