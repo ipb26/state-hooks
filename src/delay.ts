@@ -40,3 +40,12 @@ export function useDeepCompareDelay(delay: number | undefined, deps: DependencyL
 export function useCustomCompareDelay<D extends DependencyList>(delay: number | undefined, deps: D, depsEqual: DepsAreEqual<D>) {
     return useAt(useCustomCompareMemo(() => delay === undefined ? undefined : Date.now() + delay, deps, depsEqual))
 }
+
+/**
+ * Returns true after the specified delay has passed since the dependencies have changed.
+ * @param delay Delay.
+ * @returns True or false.
+ */
+export function useDelayBy(delay: number | undefined) {
+    return useDelay(delay, [delay])
+}
