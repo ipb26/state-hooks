@@ -1,7 +1,5 @@
 import { DependencyList, useEffect } from "react"
 
-//TODO deep compare etc
-
 export function useInterval(interval: number | undefined, callback: () => void, deps: DependencyList) {
     useEffect(() => {
         if (interval === undefined || interval <= 0) {
