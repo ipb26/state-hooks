@@ -14,8 +14,6 @@ export function wrapped<I extends {}, W extends {}>(wrapper: ComponentType<W>, w
     })
 }
 
-// TODO just these 2, or split to 4? replace,wrap,transformProps,wrapWithProps
-
 /**
  * A type that represents the intercept type.
  * It can either replace the component or transform the props before they are passed to the inner component.

@@ -24,21 +24,11 @@ export function useAsyncTracker() {
         }
     }
 }
-export function useTrackingAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
-    const tracker = useAsyncTracker()
-    return {
-        isRunning: tracker.isRunning,
-        runningCount: tracker.runningCount,
-        run: useCallback((...args: A) => tracker.run(() => func(...args)), [func])
-    }
-}
-
-//TODO rm?
 export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
     const tracker = useAsyncTracker()
     return {
         isRunning: tracker.isRunning,
         runningCount: tracker.runningCount,
-        run: (...args: A) => tracker.run(() => func(...args))
+        run: useCallback((...args: A) => tracker.run(() => func(...args)), [func])
     }
 }
