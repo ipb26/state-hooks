@@ -41,14 +41,14 @@ export interface ReplaceIntercept<P> {
  * @returns A new component.
  */
 export function intercept<I extends {}, O extends {}>(intercept: (props: I) => InterceptType<O>) {
-    return (component: ComponentType<O>) => {
+    return (Component: ComponentType<O>) => {
         return (props: I) => {
             const result = intercept(props)
             if (result.type === "replace") {
-                return createElement(Fragment, { children: callOrGet(result.element, component) })
+                return createElement(Fragment, { children: callOrGet(result.element, Component) })
             }
             else {
-                const children = createElement(component, result.props)
+                const children = <Component {...result.props} />
                 if (result.render === undefined) {
                     return children
                 }

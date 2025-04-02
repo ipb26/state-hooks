@@ -7,7 +7,7 @@ export type MapState<K, V> = ReturnType<typeof useMap<K, V>>
  * @param delay The initial value of the map.
  * @returns An array interface.
  */
-export function useMap<K, V>(initialValue: ReadonlyMap<K, V>) {
+export function useMap<K, V>(initialValue: ReadonlyMap<K, V> = new Map<K, V>()) {
     const [state, setState] = useState(initialValue)
     return useMemo(() => {
         return {
@@ -19,20 +19,24 @@ export function useMap<K, V>(initialValue: ReadonlyMap<K, V>) {
             size: state.size,
             values: state.values.bind(state),
             replace: (map: ReadonlyMap<K, V>) => {
-                setState(map)
+                setState(new Map<K, V>(map))
             },
             clear: () => {
                 setState(new Map<K, V>())
             },
             set: (key: K, value: V) => {
-                const map = new Map<K, V>(state)
-                map.set(key, value)
-                setState(map)
+                setState(old => {
+                    const map = new Map<K, V>(old)
+                    map.set(key, value)
+                    return map
+                })
             },
             delete: (key: K) => {
-                const map = new Map<K, V>(state)
-                map.delete(key)
-                setState(map)
+                setState(old => {
+                    const map = new Map<K, V>(old)
+                    map.delete(key)
+                    return map
+                })
             },
         }
     }, [
