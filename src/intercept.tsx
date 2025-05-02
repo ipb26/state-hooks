@@ -4,11 +4,12 @@ import { callOrGet, ValueOrFactory } from "value-or-factory"
 /**
  * Wraps the transformed component as a child of another.
  */
-export function wrapped<I extends {}, W extends {}>(wrapper: ComponentType<W>, wrapperProps: ValueOrFactory<W, [I]>) {
+export function wrapped<I extends {}, W extends { children?: ReactNode | undefined }>(wrapper: ComponentType<W>, wrapperProps: ValueOrFactory<Omit<W, "children">, [I]>) {
     return intercept((props: I) => {
         return {
             type: "transform",
             props: props,
+            //@ts-ignore TODO
             render: children => createElement(wrapper, { ...callOrGet(wrapperProps, props), children })
         }
     })
