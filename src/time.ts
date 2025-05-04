@@ -9,12 +9,14 @@ export const MAXIMUM_AT = 2147483647
  * @param time When to return true.
  * @returns True or false.
  */
-export function useAt(time: number | Date | undefined) {
+export function useAt(time: number | Date | undefined, ignoreFutureTooDistantError = false) {
     const ms = time === undefined ? undefined : (typeof time === "number" ? time : time.getTime())
     const until = ms === undefined ? undefined : ms - Date.now()
     if (until !== undefined) {
         if (until > 2147483647) {
-            throw new Error("You can not set a timeout this far in the future: " + ms + ".")
+            if (!ignoreFutureTooDistantError) {
+                throw new Error("You can not set a timeout this far in the future: " + ms + ".")
+            }
         }
     }
     const already = until === undefined ? false : until <= 0
@@ -37,6 +39,11 @@ export function useAt(time: number | Date | undefined) {
     }, [
         until,
     ])
+    if (until !== undefined) {
+        if (until > 2147483647) {
+            return false
+        }
+    }
     return passed.value
 }
 
