@@ -3,16 +3,6 @@ import { useCounter } from "./counter"
 import { useInterval } from "./interval"
 import { useIsFirstMount } from "./updates"
 
-/*
-export interface SchedulerResult<T> {
-
-    readonly first: boolean
-    readonly count: number
-    readonly value: T
-
-}
-*/
-
 /**
  * Executes a callback at a regular interval and rerenders when a new value is received.
  * @param interval Interval in milliseconds.
