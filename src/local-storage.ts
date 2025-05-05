@@ -1,10 +1,18 @@
 import { useCallback, useEffect, useState } from "react"
 
+interface StorageEvent {
+
+    readonly key: string | null
+    readonly newValue: string | null
+
+}
+
+const storageListeners = new Array<(event: StorageEvent) => void>()
+
 export function useLocalStorage(key: string) {
     return useParsingLocalStorage<string>(key, value => value, value => value)
 }
 
-//TODO use some kind of global for this
 export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => string = JSON.stringify, parse: (data: string) => T = data => JSON.parse(data) as T) {
     const [value, setRawValue] = useState(() => {
         const current = window.localStorage.getItem(key)
@@ -19,8 +27,10 @@ export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => 
                 setValue(event.newValue === null ? undefined : parse(event.newValue))
             }
         }
+        storageListeners.push(listen)
         window.addEventListener("storage", listen)
         return () => {
+            storageListeners.splice(storageListeners.indexOf(listen), 1)
             window.removeEventListener("storage", listen)
         }
     }, [
@@ -46,3 +56,34 @@ export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => 
     ])
     return [value, setValue, clearValue] as const
 }
+
+/*
+const listeners = new Map<string, Array<(value: string | undefined) => void>>()
+
+export function useGlobal(key: string) {
+    const [value, setLocalValue] = useState<string>()
+    useEffect(() => {
+        const listener = (newValue: string | undefined) => setLocalValue(newValue)
+        return () => {
+            const keyListeners = listeners.get(key)
+            if (keyListeners === undefined) {
+                return
+            }
+            keyListeners.splice(keyListeners.indexOf(listener), 1)
+        }
+    }, [
+        key
+    ])
+    const setValue = useCallback((newValue: string | undefined) => {
+        listeners.forEach(callback => {
+            callback(newValue)
+        })
+    }, [
+        listeners
+    ])
+    return [
+        value,
+        setValue,
+    ] as const
+}
+*/
