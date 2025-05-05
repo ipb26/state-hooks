@@ -1,19 +1,78 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 interface StorageEvent {
 
-    readonly key: string | null
-    readonly newValue: string | null
+    readonly key: string
+    readonly newValue: string | undefined
 
 }
 
 const storageListeners = new Array<(event: StorageEvent) => void>()
+storageListeners.push(event => {
+    if (event.newValue === undefined) {
+        window.localStorage.removeItem(event.key)
+    }
+    else {
+        window.localStorage.setItem(event.key, event.newValue)
+    }
+})
+window.addEventListener("storage", event => {
+    storageListeners.forEach(listen => {
+        if (event.key === null) {
+            return
+        }
+        listen({
+            key: event.key,
+            newValue: event.newValue ?? undefined,
+        })
+    })
+})
 
 export function useLocalStorage(key: string) {
-    return useParsingLocalStorage<string>(key, value => value, value => value)
+    const [value, setLocalValue] = useState(() => window.localStorage.getItem(key) ?? undefined)
+    useEffect(() => {
+        const listen = (event: StorageEvent) => {
+            if (event.key === key) {
+                setLocalValue(event.newValue)
+            }
+        }
+        storageListeners.push(listen)
+        return () => {
+            storageListeners.splice(storageListeners.indexOf(listen))
+        }
+    }, [
+        key
+    ])
+    const setValue = useCallback((newValue: string | undefined) => {
+        storageListeners.forEach(listen => {
+            listen({
+                key,
+                newValue,
+            })
+        })
+    }, [
+        key
+    ])
+    return [value, setValue] as const
 }
 
 export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => string = JSON.stringify, parse: (data: string) => T = data => JSON.parse(data) as T) {
+    const [value, setValue] = useLocalStorage(key)
+    const parsedValue = useMemo(() => {
+        return value === undefined ? undefined : parse(value)
+    }, [
+        value
+    ])
+    const setParsedValue = useCallback((newValue: T) => {
+        return setValue(newValue === undefined ? undefined : stringify(newValue))
+    }, [
+        setValue
+    ])
+    return [
+        parsedValue,
+        setParsedValue
+    ] as const
+    /*
     const [value, setRawValue] = useState(() => {
         const current = window.localStorage.getItem(key)
         if (current === null) {
@@ -24,37 +83,28 @@ export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => 
     useEffect(() => {
         const listen = (event: StorageEvent) => {
             if (event.key === key) {
-                setValue(event.newValue === null ? undefined : parse(event.newValue))
+                setRawValue(event.newValue === undefined ? undefined : parse(event.newValue))
             }
         }
         storageListeners.push(listen)
-        window.addEventListener("storage", listen)
         return () => {
-            storageListeners.splice(storageListeners.indexOf(listen), 1)
-            window.removeEventListener("storage", listen)
+            storageListeners.splice(storageListeners.indexOf(listen))
         }
     }, [
         key
     ])
-    const setValue = useCallback((newValue: T | undefined) => {
-        setRawValue(newValue)
-        const stringified = newValue === undefined ? undefined : stringify(newValue)
-        if (stringified === undefined) {
-            window.localStorage.removeItem(key)
-        }
-        else {
-            window.localStorage.setItem(key, stringified)
-        }
+    const setValue = useCallback((newValueRaw: T | undefined) => {
+        const newValue = newValueRaw === undefined ? undefined : stringify(newValueRaw)
+        storageListeners.forEach(listen => {
+            listen({
+                key,
+                newValue,
+            })
+        })
     }, [
         key
     ])
-    const clearValue = useCallback(() => {
-        setValue(undefined)
-        window.localStorage.removeItem(key)
-    }, [
-        key
-    ])
-    return [value, setValue, clearValue] as const
+    return [value, setValue] as const*/
 }
 
 /*
