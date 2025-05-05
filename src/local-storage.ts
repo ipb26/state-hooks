@@ -63,7 +63,7 @@ export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => 
     }, [
         value
     ])
-    const setParsedValue = useCallback((newValue: T) => {
+    const setParsedValue = useCallback((newValue: T | undefined) => {
         return setValue(newValue === undefined ? undefined : stringify(newValue))
     }, [
         setValue
