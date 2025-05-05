@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from "react"
 
+export function useLocalStorage(key: string) {
+    return useParsingLocalStorage<string>(key, value => value, value => value)
+}
+
 //TODO use some kind of global for this
-export function useLocalStorage<T>(key: string, stringify: (value: T) => string = JSON.stringify, parse: (data: string) => T = data => JSON.parse(data) as T) {
+export function useParsingLocalStorage<T>(key: string, stringify: (value: T) => string = JSON.stringify, parse: (data: string) => T = data => JSON.parse(data) as T) {
     const [value, setRawValue] = useState(() => {
         const current = window.localStorage.getItem(key)
         if (current === null) {
