@@ -1,5 +1,5 @@
 import { useBoolean } from "./boolean"
-import { useEventOnce } from "./event"
+import { useWindowEventOnce } from "./window-event"
 
 /**
  * Tracks the online status of the browser.
@@ -7,7 +7,7 @@ import { useEventOnce } from "./event"
  */
 export function useOnline() {
     const online = useBoolean(window.navigator.onLine)
-    useEventOnce(window, "online", online.on)
-    useEventOnce(window, "offline", online.off)
+    useWindowEventOnce("online", online.on)
+    useWindowEventOnce("offline", online.off)
     return online.value
 }

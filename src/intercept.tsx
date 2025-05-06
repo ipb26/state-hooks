@@ -19,7 +19,7 @@ export function wrapped<I extends {}, W extends { children?: ReactNode | undefin
  * A type that represents the intercept type.
  * It can either replace the component or transform the props before they are passed to the inner component.
  */
-type InterceptType<P extends {}> = ReplaceIntercept<P> | TransformIntercept<P>
+export type Intercept<P extends {}> = ReplaceIntercept<P> | TransformIntercept<P>
 
 export interface TransformIntercept<P> {
 
@@ -41,7 +41,7 @@ export interface ReplaceIntercept<P> {
  * @param intercept The intercept type.
  * @returns A new component.
  */
-export function intercept<I extends {}, O extends {}>(intercept: (props: I) => InterceptType<O>) {
+export function intercept<I extends {}, O extends {}>(intercept: (props: I) => Intercept<O>) {
     return (Component: ComponentType<O>) => {
         return (props: I) => {
             const result = intercept(props)

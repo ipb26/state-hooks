@@ -1,5 +1,5 @@
 import { DependencyList, useEffect } from "react"
-import { DepsAreEqual, useCustomCompareEffect, useCustomCompareUpdateEffect, useDeepCompareEffect, useEffectOnce, useThrower, useUpdateEffect } from "."
+import { DepsAreEqual, useCustomCompareEffect, useCustomCompareUpdateEffect, useDeepCompareEffect, useDeepCompareUpdateEffect, useEffectOnce, useThrower, useUpdateEffect } from "."
 
 export type AsyncEffectCallback = () => PromiseLike<void>
 
@@ -42,6 +42,13 @@ export function useCustomCompareAsyncUpdateEffect<D extends DependencyList>(call
 export function useDeepCompareAsyncEffect<D extends DependencyList>(callback: AsyncEffectCallback, deps: [...D]) {
     const thrower = useThrower()
     useDeepCompareEffect(() => {
+        callback().then(() => void 0, thrower)
+    }, deps)
+}
+
+export function useDeepCompareAsyncUpdateEffect<D extends DependencyList>(callback: AsyncEffectCallback, deps: [...D]) {
+    const thrower = useThrower()
+    useDeepCompareUpdateEffect(() => {
         callback().then(() => void 0, thrower)
     }, deps)
 }

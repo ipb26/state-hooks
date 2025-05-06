@@ -1,3 +1,2 @@
-import { DependencyList } from "react";
 
-export type DepsAreEqual<TDependencyList extends DependencyList> = (prevDeps: TDependencyList, nextDeps: TDependencyList) => boolean
+export type DepsAreEqual<TDependencyList> = (prevDeps: TDependencyList, nextDeps: TDependencyList) => boolean

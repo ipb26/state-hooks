@@ -42,7 +42,7 @@ export function useCustomCompareDelay<D extends DependencyList>(delay: number | 
 }
 
 /**
- * Returns true after the specified delay has passed since the dependencies have changed.
+ * Returns true after the specified delay has passed since the delay time has changed.
  * @param delay Delay.
  * @returns True or false.
  */

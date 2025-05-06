@@ -15,7 +15,7 @@ export function useAsyncTracker() {
         runningCount: runs.count,
         run: (promise: ValueOrFactory<PromiseLike<unknown>>) => {
             runs.increment()
-            callOrGet(promise).then(() => {
+            return callOrGet(promise).then(() => {
                 runs.decrement()
             }, e => {
                 runs.decrement()
