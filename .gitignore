@@ -6,4 +6,5 @@
 **/.yarn
 **/yarn-error.log
 .vscode
-.pnp.*
+.pnp.cjs
+.pnp.loader.mjs
