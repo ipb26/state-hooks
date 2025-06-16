@@ -2,7 +2,6 @@
 export * from "./array"
 export * from "./async"
 export * from "./async-effect"
-export * from "./bind"
 export * from "./boolean"
 export * from "./callback-factory"
 export * from "./components"

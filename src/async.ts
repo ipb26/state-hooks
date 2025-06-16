@@ -11,9 +11,9 @@ export function useAsyncTracker() {
     const runs = useCounter()
     const thrower = useThrower()
     return {
-        isRunning: runs.count > 0,
-        runningCount: runs.count,
-        run: (promise: ValueOrFactory<PromiseLike<unknown>>) => {
+        isRunning: runs.current > 0,
+        runningCount: runs.current,
+        run: useCallback((promise: ValueOrFactory<PromiseLike<unknown>>) => {
             runs.increment()
             return callOrGet(promise).then(() => {
                 runs.decrement()
@@ -21,14 +21,26 @@ export function useAsyncTracker() {
                 runs.decrement()
                 thrower(e)
             })
-        }
+        }, [
+            runs.increment,
+            runs.decrement,
+            thrower,
+        ])
     }
 }
-export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>) {
+export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>): AsyncCallback<A> {
     const tracker = useAsyncTracker()
     return {
         isRunning: tracker.isRunning,
         runningCount: tracker.runningCount,
-        run: useCallback((...args: A) => tracker.run(() => func(...args)), [func])
+        run: useCallback((...args: A) => tracker.run(() => func(...args)), [tracker.run, func])
     }
+}
+
+export interface AsyncCallback<A extends readonly unknown[]> {
+
+    readonly isRunning: boolean
+    readonly runningCount: number
+    readonly run: (...args: A) => PromiseLike<void>
+
 }

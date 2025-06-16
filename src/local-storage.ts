@@ -15,8 +15,10 @@ export function useLocalStorage(key: string) {
     }, [
         key
     ])
-    const setValue = useCallback((newValue: string | undefined) => {
-        if (newValue === undefined) {
+    const setValue = useCallback((action: string | undefined | ((oldValue: string | undefined) => string | undefined)) => {
+        const oldValue = window.localStorage.getItem(key)
+        const newValue = typeof action === "function" ? action(oldValue ?? undefined) ?? null : action ?? null
+        if (newValue === null) {
             window.localStorage.removeItem(key)
         }
         else {
@@ -25,8 +27,8 @@ export function useLocalStorage(key: string) {
         window.dispatchEvent(new StorageEvent("storage", {
             storageArea: window.localStorage,
             key,
-            oldValue: value ?? null,
-            newValue: newValue ?? null,
+            oldValue,
+            newValue,
         }))
     }, [
         key

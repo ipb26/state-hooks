@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 /**
  * A hook that provides a counter.
@@ -6,12 +6,12 @@ import { useState } from "react"
  * @returns An object that provides the current count and methods to manipulate it.
  */
 export function useCounter(start = 0) {
-    const [count, setCount] = useState(start)
+    const [current, set] = useState(start)
     return {
-        count,
-        set: setCount,
-        increment: () => setCount(count => count + 1),
-        decrement: () => setCount(count => count - 1),
-        reset: () => setCount(start),
+        current,
+        set,
+        increment: useCallback(() => set(count => count + 1), [set]),
+        decrement: useCallback(() => set(count => count - 1), [set]),
+        reset: useCallback(() => set(start), [set]),
     }
 }

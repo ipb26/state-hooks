@@ -8,8 +8,8 @@ import { DepsAreEqual } from "./types"
  * @param callback The callback.
  * @param deps The dependencies.
  */
-export function useEffectWith<D extends DependencyList>(callback: (...args: D) => void | (() => void), deps: [...D]) {
-    useEffect(() => callback(...deps), deps)
+export function useEffectWith<D extends DependencyList>(callback: undefined | ((...args: D) => void) | (() => void), deps: [...D]) {
+    useEffect(() => callback?.(...deps), deps)
 }
 
 /**
@@ -17,8 +17,8 @@ export function useEffectWith<D extends DependencyList>(callback: (...args: D) =
  * @param callback The callback.
  * @param deps The dependencies.
  */
-export function useCustomCompareEffectWith<D extends DependencyList>(callback: (...args: D) => void | (() => void), deps: [...D], depsAreEqual: DepsAreEqual<readonly [...D]>) {
-    useCustomCompareEffect(() => callback(...deps), deps, depsAreEqual)
+export function useCustomCompareEffectWith<D extends DependencyList>(callback: undefined | ((...args: D) => void) | (() => void), deps: [...D], depsAreEqual: DepsAreEqual<readonly [...D]>) {
+    useCustomCompareEffect(() => callback?.(...deps), deps, depsAreEqual)
 }
 
 /**
@@ -26,6 +26,6 @@ export function useCustomCompareEffectWith<D extends DependencyList>(callback: (
  * @param callback The callback.
  * @param deps The dependencies.
  */
-export function useDeepCompareEffectWith<D extends DependencyList>(callback: (...args: D) => void | (() => void), deps: [...D]) {
-    useDeepCompareEffect(() => callback(...deps), deps)
+export function useDeepCompareEffectWith<D extends DependencyList>(callback: undefined | ((...args: D) => void) | (() => void), deps: [...D]) {
+    useDeepCompareEffect(() => callback?.(...deps), deps)
 }
