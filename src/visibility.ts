@@ -1,9 +1,9 @@
 import { useBoolean } from "./boolean";
-import { useDocumentEventOnce } from "./document-event";
+import { useEvent } from "./event";
 
 export function useVisibility() {
     const visible = useBoolean(document.visibilityState === "visible")
-    useDocumentEventOnce("visibilitychange", () => {
+    useEvent(document, "visibilitychange", () => {
         visible.set(document.visibilityState === "visible")
     })
     return visible.value

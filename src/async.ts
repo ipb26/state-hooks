@@ -1,7 +1,10 @@
-import { useCallback } from "react"
+import { DependencyList, useCallback } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { useCounter } from "./counter"
+import { useCustomCompareCallback } from "./custom-compare"
+import { useDeepCompareCallback } from "./deep-compare"
 import { useThrower } from "./thrower"
+import { DepsAreEqual } from "./types"
 
 /**
  * Returns an object that can be used to track async operations.
@@ -28,14 +31,6 @@ export function useAsyncTracker() {
         ])
     }
 }
-export function useAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>): AsyncCallback<A> {
-    const tracker = useAsyncTracker()
-    return {
-        isRunning: tracker.isRunning,
-        runningCount: tracker.runningCount,
-        run: useCallback((...args: A) => tracker.run(() => func(...args)), [tracker.run, func])
-    }
-}
 
 export interface AsyncCallback<A extends readonly unknown[]> {
 
@@ -43,4 +38,22 @@ export interface AsyncCallback<A extends readonly unknown[]> {
     readonly runningCount: number
     readonly run: (...args: A) => PromiseLike<void>
 
+}
+
+export function useTrackingAsync<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>): AsyncCallback<A> {
+    const tracker = useAsyncTracker()
+    return {
+        isRunning: tracker.isRunning,
+        runningCount: tracker.runningCount,
+        run: useCallback((...args: A) => tracker.run(() => func(...args)), [tracker.run, func])
+    }
+}
+export function useTrackingAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>, deps: DependencyList) {
+    return useTrackingAsync(useCallback(func, deps))
+}
+export function useCustomCompareTrackingAsyncCallback<R, A extends readonly unknown[], D extends DependencyList>(func: (...args: A) => PromiseLike<R>, deps: D, depsAreEqual: DepsAreEqual<D>) {
+    return useTrackingAsync(useCustomCompareCallback(func, deps, depsAreEqual))
+}
+export function useDeepCompareTrackingAsyncCallback<R, A extends readonly unknown[]>(func: (...args: A) => PromiseLike<R>, deps: DependencyList) {
+    return useTrackingAsync(useDeepCompareCallback(func, deps))
 }

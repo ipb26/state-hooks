@@ -1,84 +1,87 @@
-import { useEffect, useState } from "react"
+import { DependencyList, useCallback, useEffect } from "react"
+import { useCustomCompareCallback } from "./custom-compare"
+import { useDeepCompareCallback } from "./deep-compare"
+import { DepsAreEqual } from "./types"
 
-//TODO will this even work reliably?
-export function useEvery(interval: number | undefined) {
-    const [reached, setReached] = useState(false)
+export function useInterval(timeout: number, effectCallback: () => void, deps: DependencyList) {
+    const effect = useCallback(effectCallback, deps)
     useEffect(() => {
-        if (interval === undefined) {
-            return
-        }
-        const timeout = setTimeout(setReached.bind(null, true), interval)
+        const interval = setInterval(effect, timeout)
         return () => {
-            return clearTimeout(timeout)
+            clearInterval(interval)
         }
     }, [
-        interval
+        timeout,
+        effect
     ])
+}
+export function useCustomCompareInterval<D extends DependencyList>(timeout: number, effectCallback: () => void, deps: D, depsAreEqual: DepsAreEqual<D>) {
+    const effect = useCustomCompareCallback(effectCallback, deps, depsAreEqual)
     useEffect(() => {
-        if (reached) {
-            setReached(false)
+        const interval = setInterval(effect, timeout)
+        return () => {
+            clearInterval(interval)
         }
     }, [
-        reached
+        timeout,
+        effect
     ])
-    return reached
+}
+export function useDeepCompareInterval(timeout: number, effectCallback: () => void, deps: DependencyList) {
+    const effect = useDeepCompareCallback(effectCallback, deps)
+    useEffect(() => {
+        const interval = setInterval(effect, timeout)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [
+        timeout,
+        effect
+    ])
 }
 
 /*
-export function useInterval(interval: number | undefined, callback: () => void, deps: DependencyList) {
-    useEffect(() => {
-        if (interval === undefined || interval <= 0) {
-            return
-        }
-        const timer = setInterval(callback, interval)
-        return () => {
-            clearInterval(timer)
+export function useAsyncInterval(interval: number, effectCallback: () => PromiseLike<void>, deps: DependencyList) {
+    const [next, setNext] = useState(Date.now)
+    const run = useAt(next)
+    const effect = useCallback(effectCallback, deps)
+    useAsyncEffect(async () => {
+        if (run) {
+            await effect()
+            setNext(Date.now() + interval)
         }
     }, [
-        interval,
-        deps
+        effect,
+        run,
     ])
 }
-export function useCustomCompareInterval<D extends DependencyList>(interval: number | undefined, callback: () => void, deps: D, depsAreEqual: DepsAreEqual<D>) {
-    useCustomCompareEffect<D>(() => {
-        if (interval === undefined || interval <= 0) {
-            return
-        }
-        const timer = setInterval(callback, interval)
-        return () => {
-            clearInterval(timer)
+export function useAsyncCustomCompareInterval<D extends DependencyList>(interval: number, effectCallback: () => PromiseLike<void>, deps: D, depsAreEqual: DepsAreEqual<D>) {
+    const [next, setNext] = useState(Date.now)
+    const run = useAt(next)
+    const effect = useCustomCompareCallback(effectCallback, deps, depsAreEqual)
+    useAsyncEffect(async () => {
+        if (run) {
+            await effect()
+            setNext(Date.now() + interval)
         }
     }, [
-        interval,
-        ...deps
-    ], depsAreEqual)
+        effect,
+        run,
+    ])
 }
-export function useDeepCompareInterval(interval: number | undefined, callback: () => void, deps: DependencyList) {
-    useDeepCompareEffect(() => {
-        if (interval === undefined || interval <= 0) {
-            return
-        }
-        const timer = setInterval(callback, interval)
-        return () => {
-            clearInterval(timer)
+export function useAsyncDeepCompareInterval(interval: number, effectCallback: () => PromiseLike<void>, deps: DependencyList) {
+    const [next, setNext] = useState(Date.now)
+    const run = useAt(next)
+    const effect = useDeepCompareCallback(effectCallback, deps)
+    useAsyncEffect(async () => {
+        if (run) {
+            await effect()
+            setNext(Date.now() + interval)
         }
     }, [
-        interval,
-        deps
+        effect,
+        run,
     ])
 }
 
-export function useIntervalOnce(interval: number | undefined, callback: () => void) {
-    useEffect(() => {
-        if (interval === undefined || interval === 0) {
-            return
-        }
-        const timer = setInterval(callback, interval)
-        return () => {
-            clearInterval(timer)
-        }
-    }, [
-        interval
-    ])
-}
 */

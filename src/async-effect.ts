@@ -1,5 +1,10 @@
 import { DependencyList, useEffect } from "react"
-import { DepsAreEqual, useCustomCompareEffect, useCustomCompareUpdateEffect, useDeepCompareEffect, useDeepCompareUpdateEffect, useEffectOnce, useThrower, useUpdateEffect } from "."
+import { useCustomCompareEffect, useCustomCompareUpdateEffect } from "./custom-compare"
+import { useDeepCompareEffect, useDeepCompareUpdateEffect } from "./deep-compare"
+import { useEffectOnce } from "./once"
+import { useThrower } from "./thrower"
+import { useUpdateEffect } from "./updates"
+import { DepsAreEqual } from "./types"
 
 export type AsyncEffectCallback = () => PromiseLike<void>
 

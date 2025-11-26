@@ -44,8 +44,8 @@ export function useAt(time: number | Date | undefined, ifTooDistant: "ignore" | 
     return passed.value
 }
 
-export function useEffectAt(time: number | undefined, effect: EffectCallback) {
-    const at = useAt(time)
+export function useEffectAt(time: number | undefined, effect: EffectCallback, ifTooDistant: "ignore" | "throwError" = "throwError") {
+    const at = useAt(time, ifTooDistant)
     useEffect(() => {
         if (at) {
             return effect()
