@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 /**
  * Returns convenience methods to update an array.
@@ -17,16 +17,36 @@ export function useSet<T>(initialValue: ReadonlySet<T> | (() => ReadonlySet<T>) 
     }, [
         setValue
     ])
-    const clear = () => setValue(new Set())
-    return useMemo(() => {
-        return {
-            value,
-            setValue,
-            add,
-            remove,
-            clear
-        }
+    const removeSymmetric = useCallback((elements: Iterable<T>) => {
+        setValue(value => value.symmetricDifference(new Set(elements)))
     }, [
-        value
+        setValue
     ])
+    const intersect = useCallback((elements: Iterable<T>) => {
+        setValue(value => value.intersection(new Set(elements)))
+    }, [
+        setValue
+    ])
+    const strip = useCallback(() => {
+        setValue(new Set())
+        return value
+    }, [
+        value,
+        setValue
+    ])
+    const clear = useCallback(() => {
+        setValue(new Set())
+    }, [
+        setValue
+    ])
+    return {
+        value,
+        setValue,
+        add,
+        remove,
+        removeSymmetric,
+        intersect,
+        strip,
+        clear
+    }
 }
