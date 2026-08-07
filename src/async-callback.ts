@@ -1,9 +1,9 @@
 import { DependencyList, useCallback } from "react"
-import { useCustomCompareCallback } from "./custom-compare"
-import { useDeepCompareCallback } from "./deep-compare"
-import { useCallbackOnce } from "./once"
-import { useThrower } from "./thrower"
-import { DepsAreEqual } from "./types"
+import { useCustomCompareCallback } from "./custom-compare.js"
+import { useDeepCompareCallback } from "./deep-compare.js"
+import { useCallbackOnce } from "./once.js"
+import { useThrower } from "./thrower.js"
+import { DepsAreEqual } from "./types.js"
 
 export function useAsyncCallback<T extends (...args: any) => Promise<any>, D extends DependencyList>(callback: T, deps: [...D]) {
     const thrower = useThrower()

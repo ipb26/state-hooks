@@ -1,5 +1,5 @@
-import { useBoolean } from "./boolean"
-import { useEvent } from "./event"
+import { useBoolean } from "./boolean.js"
+import { useEvent } from "./event.js"
 
 /**
  * Tracks the online status of the browser.

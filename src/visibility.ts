@@ -1,5 +1,5 @@
-import { useBoolean } from "./boolean";
-import { useEvent } from "./event";
+import { useBoolean } from "./boolean.js";
+import { useEvent } from "./event.js";
 
 export function useVisibility() {
     const visible = useBoolean(document.visibilityState === "visible")

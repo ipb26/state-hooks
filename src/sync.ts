@@ -1,6 +1,6 @@
 import { dequal } from "dequal"
 import { Dispatch, SetStateAction, useState } from "react"
-import { useCustomCompareUpdateEffect } from "./custom-compare"
+import { useCustomCompareUpdateEffect } from "./custom-compare.js"
 
 export function useSyncState<T>(inputValue: T, setInputValue?: Dispatch<SetStateAction<T>>) {
     return useCustomCompareSyncState(inputValue, setInputValue, (a, b) => a === b)

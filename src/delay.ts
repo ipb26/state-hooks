@@ -1,9 +1,9 @@
 import { DependencyList, useMemo } from "react";
-import { useCustomCompareMemo } from "./custom-compare";
-import { useDeepCompareMemo } from "./deep-compare";
-import { useMemoOnce } from "./once";
-import { useAt } from "./time";
-import { DepsAreEqual } from "./types";
+import { useCustomCompareMemo } from "./custom-compare.js";
+import { useDeepCompareMemo } from "./deep-compare.js";
+import { useMemoOnce } from "./once.js";
+import { useAt } from "./time.js";
+import { DepsAreEqual } from "./types.js";
 
 /**
  * Returns true after the specified delay has passed.

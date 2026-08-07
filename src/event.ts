@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { useArray } from "./array"
-import { useDeepCompareConstant } from "./constant"
+import { useArray } from "./array.js"
+import { useDeepCompareConstant } from "./constant.js"
 
 export interface EventTarget<E> {
 

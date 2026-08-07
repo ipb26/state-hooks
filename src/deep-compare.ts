@@ -1,6 +1,6 @@
 import { dequal } from "dequal"
 import { DependencyList, EffectCallback } from "react"
-import { useCustomCompareCallback, useCustomCompareEffect, useCustomCompareMemo, useCustomCompareUpdateEffect } from "./custom-compare"
+import { useCustomCompareCallback, useCustomCompareEffect, useCustomCompareMemo, useCustomCompareUpdateEffect } from "./custom-compare.js"
 
 export function useDeepCompareEffect(effect: EffectCallback, deps: DependencyList) {
     return useCustomCompareEffect(effect, deps, dequal)

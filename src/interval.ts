@@ -1,7 +1,7 @@
 import { DependencyList, useCallback, useEffect } from "react"
-import { useCustomCompareCallback } from "./custom-compare"
-import { useDeepCompareCallback } from "./deep-compare"
-import { DepsAreEqual } from "./types"
+import { useCustomCompareCallback } from "./custom-compare.js"
+import { useDeepCompareCallback } from "./deep-compare.js"
+import { DepsAreEqual } from "./types.js"
 
 export function useInterval(timeout: number, effectCallback: () => void, deps: DependencyList) {
     const effect = useCallback(effectCallback, deps)

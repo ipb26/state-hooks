@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useCallbackOnce } from "./once"
+import { useCallbackOnce } from "./once.js"
 
 /**
  * Returns a boolean state object.

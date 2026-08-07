@@ -1,10 +1,10 @@
 import { DependencyList, useCallback } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
-import { useCounter } from "./counter"
-import { useCustomCompareCallback } from "./custom-compare"
-import { useDeepCompareCallback } from "./deep-compare"
-import { useThrower } from "./thrower"
-import { DepsAreEqual } from "./types"
+import { useCounter } from "./counter.js"
+import { useCustomCompareCallback } from "./custom-compare.js"
+import { useDeepCompareCallback } from "./deep-compare.js"
+import { useThrower } from "./thrower.js"
+import { DepsAreEqual } from "./types.js"
 
 /**
  * Returns an object that can be used to track async operations.

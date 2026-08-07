@@ -1,6 +1,6 @@
 import { EffectCallback, useEffect } from "react";
-import { useBoolean } from "./boolean";
-import { useUpdateEffect } from "./updates";
+import { useBoolean } from "./boolean.js";
+import { useUpdateEffect } from "./updates.js";
 
 export const MAXIMUM_AT = 2147483647
 

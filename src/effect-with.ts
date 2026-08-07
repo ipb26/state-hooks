@@ -1,7 +1,7 @@
 import { DependencyList, useEffect } from "react"
-import { useCustomCompareEffect } from "./custom-compare"
-import { useDeepCompareEffect } from "./deep-compare"
-import { DepsAreEqual } from "./types"
+import { useCustomCompareEffect } from "./custom-compare.js"
+import { useDeepCompareEffect } from "./deep-compare.js"
+import { DepsAreEqual } from "./types.js"
 
 /**
  * An effect that passes its dependencies to the callback.

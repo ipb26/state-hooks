@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { useAsyncCallback } from "./async-callback"
-import { useThrower } from "./thrower"
+import { useAsyncCallback } from "./async-callback.js"
+import { useThrower } from "./thrower.js"
 
 /**
  * Check whether a web lock is taken. Note that this has no way to tell when a lock is started. You will need to call update on the resulting object when the lock is first opened. We recommend using a broadcast channel.

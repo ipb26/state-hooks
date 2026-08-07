@@ -1,8 +1,8 @@
 import { DependencyList, useMemo } from "react"
-import { useCustomCompareMemo } from "./custom-compare"
-import { useDeepCompareMemo } from "./deep-compare"
-import { useMemoOnce } from "./once"
-import { DepsAreEqual } from "./types"
+import { useCustomCompareMemo } from "./custom-compare.js"
+import { useDeepCompareMemo } from "./deep-compare.js"
+import { useMemoOnce } from "./once.js"
+import { DepsAreEqual } from "./types.js"
 
 /**
  * Creates a new instance of a class.
